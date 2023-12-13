@@ -1,26 +1,44 @@
 package aoc2023
 
-// Problem 1: https://adventofcode.com/2023/day/1
+import (
+	"fmt"
+	"strconv"
+)
 
-func calibrateValue(input string) int {
+// Problem 1: https://adventofcode.com/2023/day/1
+func CalibrateValue(input string) int {
 	ret := 0
 
-	first := int32(0)
+	numStr := ""
 
-	arr := []int{}
+	// append \n to input
+	input += "\n"
 
-	for i, ch := range input {
-		if first == 0 {
-			first = ch
+	for _, ch := range input {
+		if isNumber(ch) {
+			numStr += string(ch)
 		}
 
 		if ch == '\n' {
-			ret += int(first) + int(input[i-1])
-			arr = append(arr, int(first))
-			arr = append(arr, int(input[i-1]))
-			first = int32(0)
+			if len(numStr) == 1 {
+				numStr += numStr
+			} else {
+				numStr = fmt.Sprintf("%c%c", numStr[0], numStr[len(numStr)-1])
+			}
+
+			num, err := strconv.Atoi(numStr)
+			if err != nil {
+				panic(err)
+			}
+
+			ret += num
+			numStr = ""
 		}
 	}
 
 	return ret
+}
+
+func isNumber(ch int32) bool {
+	return ch >= '0' && ch <= '9'
 }
