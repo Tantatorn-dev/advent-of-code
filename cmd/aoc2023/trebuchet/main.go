@@ -16,5 +16,9 @@ func main() {
 
 	input := string(content)
 
-	fmt.Println(aoc2023.CalibrateValue(input))
+	fmt.Println("Value: ", aoc2023.CalibrateValue(input))
+
+	fmt.Println("Value with number string (one, two, three, ...): ", aoc2023.CalibrateValue2(
+		input,
+	))
 }

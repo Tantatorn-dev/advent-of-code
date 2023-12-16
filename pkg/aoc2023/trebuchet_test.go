@@ -1,8 +1,10 @@
 package aoc2023
 
-import "testing"
+import (
+	"testing"
+)
 
-func Test_calibrateValue(t *testing.T) {
+func Test_CalibrateValue(t *testing.T) {
 	type args struct {
 		input string
 	}
@@ -23,6 +25,39 @@ func Test_calibrateValue(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := CalibrateValue(tt.args.input); got != tt.want {
 				t.Errorf("calibrateValue() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCalibrateValue2(t *testing.T) {
+	type args struct {
+		input string
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			name: "success",
+			args: args{
+				input: "two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\nzoneight234\n7pqrstsixteen",
+			},
+			want: 281,
+		},
+		{
+			name: "success",
+			args: args{
+				input: "two\neightwothree",
+			},
+			want: 105,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CalibrateValue2(tt.args.input); got != tt.want {
+				t.Errorf("CalibrateValue2() = %v, want %v", got, tt.want)
 			}
 		})
 	}
