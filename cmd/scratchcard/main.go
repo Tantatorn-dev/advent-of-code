@@ -16,5 +16,6 @@ func main() {
 
 	input := string(content)
 
-	fmt.Println("Value: ", aoc2023.CountWinningNumber(input))
+	fmt.Println("Value 1: ", aoc2023.Solve1(input))
+	fmt.Println("Value 2: ", aoc2023.Solve2(input))
 }
