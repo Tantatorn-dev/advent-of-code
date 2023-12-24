@@ -27,34 +27,42 @@ func GetLowestLocation(input string) int {
 		}
 	}
 
-	var maps []map[int]int
+	var locationMaps [][]Map
 
 	for i, start := range mapStarts {
 		if i == len(mapStarts)-1 {
-			maps = append(maps, getMap(strings.Join(lines[start+1:], "\n")))
+			locationMaps = append(locationMaps, getMap(strings.Join(lines[start+1:], "\n")))
 		} else {
-			maps = append(maps, getMap(strings.Join(lines[start+1:mapStarts[i+1]-1], "\n")))
+			locationMaps = append(locationMaps, getMap(strings.Join(lines[start+1:mapStarts[i+1]-1], "\n")))
 		}
 	}
 
 	// map seed to location(final map)
-	for _, m := range maps {
+	for _, maps := range locationMaps {
 		for i, seed := range seeds {
-			if _, ok := m[seed]; !ok {
-				continue
+
+			for _, m := range maps {
+				if seed >= m.Source && seed <= m.Source+m.RangeValue {
+					seeds[i] = m.Dest + (seed - m.Source)
+				}
 			}
 
-			seeds[i] = m[seed]
 		}
 	}
 
 	return slices.Min(seeds)
 }
 
-func getMap(input string) map[int]int {
+type Map struct {
+	Source     int
+	Dest       int
+	RangeValue int
+}
+
+func getMap(input string) []Map {
 	lines := strings.Split(input, "\n")
 
-	ret := make(map[int]int)
+	var ret []Map
 
 	for _, line := range lines {
 		numStr := strings.Split(line, " ")
@@ -74,9 +82,13 @@ func getMap(input string) map[int]int {
 			panic(err)
 		}
 
-		for i := 0; i < rangeValue; i++ {
-			ret[source+i] = dest + i
+		m := Map{
+			Source:     source,
+			Dest:       dest,
+			RangeValue: rangeValue,
 		}
+
+		ret = append(ret, m)
 	}
 
 	return ret
