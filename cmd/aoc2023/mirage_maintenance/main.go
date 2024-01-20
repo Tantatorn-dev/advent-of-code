@@ -16,5 +16,6 @@ func main() {
 
 	input := string(content)
 
-	fmt.Println(aoc2023.SumExtrapolatedValues(input))
+	fmt.Println(aoc2023.SumExtrapolatedValues(input, false))
+	fmt.Println(aoc2023.SumExtrapolatedValues(input, true))
 }

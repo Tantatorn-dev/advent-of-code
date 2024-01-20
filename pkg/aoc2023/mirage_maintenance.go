@@ -6,19 +6,19 @@ import (
 )
 
 // Problem: https://adventofcode.com/2023/day/9
-func SumExtrapolatedValues(input string) int {
+func SumExtrapolatedValues(input string, isPrepend bool) int {
 	lines := strings.Split(input, "\n")
 
 	sum := 0
 
 	for _, line := range lines {
-		sum += findExtrapolatedValue(line)
+		sum += findExtrapolatedValue(line, isPrepend)
 	}
 
 	return sum
 }
 
-func findExtrapolatedValue(input string) int {
+func findExtrapolatedValue(input string, isPrepend bool) int {
 	strArr := strings.Split(input, " ")
 
 	nums := make([]int, len(strArr))
@@ -33,15 +33,31 @@ func findExtrapolatedValue(input string) int {
 	// append 0 to last elem
 	histories[len(histories)-1] = append(histories[len(histories)-1], 0)
 
+	if isPrepend {
+		histories[len(histories)-1] = append([]int{0}, histories[len(histories)-1]...)
+	}
+
 	for i := len(histories) - 2; i >= 0; i-- {
 		current := histories[i]
 
 		prev := histories[i+1][len(histories[i+1])-1]
 
 		histories[i] = append(current, current[len(current)-1]+prev)
+
+		if isPrepend {
+			prev = histories[i+1][0]
+
+			histories[i] = append([]int{histories[i][0] - prev}, histories[i]...)
+		}
 	}
 
-	return histories[0][len(histories[0])-1]
+	ret := histories[0][len(histories[0])-1]
+
+	if isPrepend {
+		ret = histories[0][0]
+	}
+
+	return ret
 }
 
 func constructHistories(nums []int) [][]int {
