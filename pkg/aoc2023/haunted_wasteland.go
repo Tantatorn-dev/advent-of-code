@@ -40,6 +40,57 @@ out:
 	return stepCount
 }
 
+func TraverseWasteland2(input string) int {
+	stepCount := 1
+
+	// split text between empty lines
+	strArr := strings.Split(input, "\n\n")
+
+	directions := strArr[0]
+
+	wastelandMap := constructWastelandMap(strArr[1])
+
+	currNodes := []string{}
+
+	// find all keys that end with 'A'
+	for k := range wastelandMap {
+		// check if last char is 'A'
+		if k[len(k)-1] == 'A' {
+			currNodes = append(currNodes, k)
+		}
+	}
+
+out:
+	for {
+		for i := 0; i < len(directions); i++ {
+			for j, node := range currNodes {
+				if directions[i] == 'L' {
+					currNodes[j] = wastelandMap[node][0]
+				} else if directions[i] == 'R' {
+					currNodes[j] = wastelandMap[node][1]
+				}
+			}
+
+			// all nodes must end with 'Z' before we can break
+			isReadyToBreak := true
+			for _, node := range currNodes {
+				if node[len(node)-1] != 'Z' {
+					isReadyToBreak = false
+					break
+				}
+			}
+
+			if isReadyToBreak {
+				break out
+			}
+
+			stepCount++
+		}
+	}
+
+	return stepCount
+}
+
 func constructWastelandMap(input string) map[string][]string {
 	lines := strings.Split(input, "\n")
 
