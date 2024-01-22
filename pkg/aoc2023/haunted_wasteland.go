@@ -3,6 +3,8 @@ package aoc2023
 import (
 	"regexp"
 	"strings"
+
+	"github.com/Tantatorn-dev/advent-of-code/pkg/utils"
 )
 
 // Problem: https://adventofcode.com/2023/day/8
@@ -41,8 +43,6 @@ out:
 }
 
 func TraverseWasteland2(input string) int {
-	stepCount := 1
-
 	// split text between empty lines
 	strArr := strings.Split(input, "\n\n")
 
@@ -60,35 +60,36 @@ func TraverseWasteland2(input string) int {
 		}
 	}
 
-out:
-	for {
-		for i := 0; i < len(directions); i++ {
-			for j, node := range currNodes {
-				if directions[i] == 'L' {
-					currNodes[j] = wastelandMap[node][0]
-				} else if directions[i] == 'R' {
-					currNodes[j] = wastelandMap[node][1]
+	stepCounts := make([]int, len(currNodes))
+
+	// assign 1 to all stepCounts
+	for i := range stepCounts {
+		stepCounts[i] = 1
+	}
+
+	for i, node := range currNodes {
+	out:
+		for {
+			for j := 0; j < len(directions); j++ {
+				if directions[j] == 'L' {
+					currNodes[i] = wastelandMap[currNodes[i]][0]
+				} else if directions[j] == 'R' {
+					currNodes[i] = wastelandMap[currNodes[i]][1]
 				}
-			}
 
-			// all nodes must end with 'Z' before we can break
-			isReadyToBreak := true
-			for _, node := range currNodes {
-				if node[len(node)-1] != 'Z' {
-					isReadyToBreak = false
-					break
+				if currNodes[i][len(node)-1] == 'Z' {
+					break out
 				}
-			}
 
-			if isReadyToBreak {
-				break out
+				stepCounts[i] += 1
 			}
-
-			stepCount++
 		}
 	}
 
-	return stepCount
+	// find LCD of all stepCounts
+	ret := utils.LCMSlice(stepCounts)
+
+	return ret
 }
 
 func constructWastelandMap(input string) map[string][]string {
